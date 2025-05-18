@@ -12,7 +12,7 @@ from heatmap.heat_map import (
     combine_heatmaps,
     draw_github_style_heatmap,
 )
-from cousera.bonus_calculator import total_bonus_sum
+from cousera import bonus_calculator
 
 
 def run():
@@ -186,32 +186,32 @@ def run():
     print("\n===== Calculating Course Bonus =====")
     course_data = run_interactive()
     
+    # Get the updated global bonus sum
+    total_bonus = bonus_calculator.total_bonus_sum
+    
     # Apply course bonus to the user's rating
-    if course_data:
-        # Extract total bonus and breakdown
-        total_bonus = course_data.get('total_bonus', 0)
-        bonus_breakdown = course_data.get('bonus_breakdown', {})
-        
+    if total_bonus > 0:
         # Update user's course bonus and total rating
         ranking_system.users[user_id].course_bonus = total_bonus
         ranking_system.users[user_id].total_rating = ranking_system.users[user_id].unified_rating + total_bonus
         
-        # Display bonus breakdown
-        print(f"\nBonus: {total_bonus:.1f} points ({(total_bonus/45*100):.1f}%)")
-        print("    Breakdown:")
-        print(f"    Institution: {bonus_breakdown.get('institution', 0):.1f}")
-        print(f"    Duration: {bonus_breakdown.get('duration', 0):.1f}")
-        print(f"    Field: {bonus_breakdown.get('field', 0):.1f}")
-        print(f"    Skills: {bonus_breakdown.get('skills', 0):.1f}")
+        # Display bonus breakdown (if available in course_data)
+        if course_data:
+            bonus_breakdown = course_data.get('bonus_breakdown', {})
+            print(f"\nBonus: {total_bonus:.1f} points ({(total_bonus/45*100):.1f}%)")
+            print("    Breakdown:")
+            print(f"    Institution: {bonus_breakdown.get('institution', 0):.1f}")
+            print(f"    Duration: {bonus_breakdown.get('duration', 0):.1f}")
+            print(f"    Field: {bonus_breakdown.get('field', 0):.1f}")
+            print(f"    Skills: {bonus_breakdown.get('skills', 0):.1f}")
     else:
         print("No course bonus was calculated")
-
     
     # Final Output
     print("\n===== Final Rankings =====")
     print(f"{'Rank':<5} {'User ID':<15} {'Platform Rating':<18} {'Course Bonus':<15} {'Total Rating':<15}")
     for i, (user_id, platform_rating, course_bonus, total) in enumerate(ranking_system.get_rankings(), 1):
-        print(f"{i:<5} {user_id:<15} {platform_rating:<18.1f} {course_bonus:<15.1f} {total:<15.1f}")
+        print(f"{i:<5} {user_id:<15} {platform_rating:<18.1f} {bonus_calculator.total_bonus_sum :<15.1f} {total:<15.1f}")
     
     # Show detailed ratings per platform
     user = ranking_system.users[user_id]
@@ -222,8 +222,8 @@ def run():
     
     print("\n===== Component Breakdown =====")
     print(f"Base Platform Rating: {user.unified_rating:.1f}")
-    print(f"Course Bonus: {total_bonus_sum:.1f}")
-    print(f"Total Rating: {user.total_rating+total_bonus_sum:.1f}")
+    print(f"Course Bonus: {bonus_calculator.total_bonus_sum:.1f}")
+    print(f"Total Rating: {user.total_rating+ bonus_calculator.total_bonus_sum :.1f}")
 
 if __name__ == "__main__":
     run()

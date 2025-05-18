@@ -27,7 +27,7 @@ from typing import Dict, Any, List
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-total_bonus_sum = 0
+total_bonus_sum: float = 0.0
 # Institution reputation scores (higher = more prestigious)
 INSTITUTION_SCORES = {
     # Top Tier Universities (9-10)
@@ -928,11 +928,13 @@ def calculate_profile_bonus(profile_data: Dict[str, Any]) -> Dict[str, Any]:
         Dict[str, Any]: The profile data with added bonus information.
     """
     # Create a copy of the profile data
+    
+    global total_bonus_sum 
     result = profile_data.copy()
     
     # Calculate bonus for each course
+    total_bonus_sum = 0.0
     courses_with_bonus = []
-    total_bonus_sum = 0
     for course in profile_data.get("completed_courses", []):
         course_with_bonus = calculate_course_bonus(course)
         courses_with_bonus.append(course_with_bonus)
