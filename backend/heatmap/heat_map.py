@@ -310,5 +310,4 @@ def main():
     
     print("\n✨ Done! Your coding activity graph has been displayed.")
 
-if __name__ == "__main__":
-    main()
+

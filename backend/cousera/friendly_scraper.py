@@ -8,7 +8,7 @@ but also works without them, prompting for user input when needed.
 
 import sys
 import json
-from coursera_scraper import scrape_coursera_profile, validate_coursera_url
+from .coursera_scraper import scrape_coursera_profile, validate_coursera_url
 
 def main():
     """Main entry point for the interactive Coursera scraper"""

@@ -6,8 +6,18 @@ This is a simple wrapper script that runs the Coursera Profile Scraper in intera
 prompting the user for a Coursera profile URL.
 """
 
+# import sys
+# from interactive_scraper import main
+
+# if __name__ == "__main__":
+#     sys.exit(main())
+
 import sys
-from interactive_scraper import main
+from .interactive_scraper import main
+
+
+def run_interactive():
+    return main()
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(run_interactive())

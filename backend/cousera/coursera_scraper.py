@@ -17,12 +17,12 @@ from typing import Dict, Any, Optional, Union, List
 import requests
 from bs4 import BeautifulSoup, Tag
 
-from coursera_scraper_utils import (
+from .coursera_scraper_utils import (
     extract_user_info,
     extract_completed_courses,
     validate_coursera_url
 )
-from coursera_mock_data import generate_mock_data
+from .coursera_mock_data import generate_mock_data
 
 # Configure logging
 logging.basicConfig(

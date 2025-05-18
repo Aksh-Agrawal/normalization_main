@@ -1,14 +1,25 @@
-from platform import UnifiedRankingSystem, User
+from formula_main import UnifiedRankingSystem, User
 from CodeForces_api import fetch_codeforces_profile_api
 from leetcode_api import fetch_leetcode_profile
 from CodeChef_api import fetch_codechef_profile
 # from course_credential_manager import CourseCredentialManager
+# from cousera.main_scrapper import run_scraper
+from cousera.run import run_interactive
+from heatmap.heat_map import (
+    get_codeforces_heatmap,
+    get_leetcode_heatmap,
+    get_codechef_heatmap,
+    combine_heatmaps,
+    draw_github_style_heatmap,
+)
+
+
 
 def run():
     ranking_system = UnifiedRankingSystem()
     # course_manager = CourseCredentialManager()
     user_id = None
-
+    run_interactive()
     # Add all platforms first
     ranking_system.add_platform("Codeforces", max_rating=3000)
     ranking_system.add_platform("Leetcode", max_rating=2500)
@@ -98,6 +109,10 @@ def run():
     )
 
     # Course bonus section
+
+    
+   
+
     # print("\n===== Course Credentials =====")
     # print("Would you like to connect your educational platforms for course bonus points?")
     # if input("(y/n): ").lower() == 'y':
@@ -117,7 +132,19 @@ def run():
     #     ranking_system.users[user_id].total_rating = ranking_system.users[user_id].unified_rating + course_bonus
     # else:
     #     print("Skipping course bonus calculation.")
+ 
 
+    # heatmap section
+
+    print("\n===== Fetching User Activity Data (Heatmaps) =====")
+    cf_heatmap = get_codeforces_heatmap(handle_CF)
+    lc_heatmap = get_leetcode_heatmap(handle_LC)
+    cc_heatmap = get_codechef_heatmap(handle_CC)
+
+    combined_heatmap = combine_heatmaps(cf_heatmap, lc_heatmap, cc_heatmap)
+
+    # Display combined heatmap
+    draw_github_style_heatmap(combined_heatmap, title=f"{user_id}'s Coding Activity")
     # Final Output
     print("\n===== Final Rankings =====")
     print(f"{'Rank':<5} {'User ID':<15} {'Platform Rating':<18} {'Course Bonus':<15} {'Total Rating':<15}")

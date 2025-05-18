@@ -8,7 +8,7 @@ prompting the user for a profile URL and displaying the results.
 
 import sys
 import json
-from coursera_scraper import scrape_coursera_profile, validate_coursera_url
+from .coursera_scraper import scrape_coursera_profile, validate_coursera_url
 
 def main():
     # Welcome message

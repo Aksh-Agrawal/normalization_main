@@ -11,7 +11,7 @@ import sys
 import json
 import time
 import logging
-from coursera_scraper import scrape_coursera_profile, validate_coursera_url
+from .coursera_scraper import scrape_coursera_profile, validate_coursera_url
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
