@@ -19,7 +19,6 @@ def run():
     ranking_system = UnifiedRankingSystem()
     # course_manager = CourseCredentialManager()
     user_id = None
-    run_interactive()
     # Add all platforms first
     ranking_system.add_platform("Codeforces", max_rating=3000)
     ranking_system.add_platform("Leetcode", max_rating=2500)
@@ -27,73 +26,110 @@ def run():
     ranking_system.add_platform("CodeChef", max_rating=1800)
 
     # Fetch CodeForces profile
-    handle_CF = input("Enter Codeforces handle: ")
-    profile_data_CF = fetch_codeforces_profile_api(handle_CF)
+    while True:
+        handle_CF = input("Enter Codeforces handle (or press Enter to skip): ").strip()
+        if not handle_CF:
+            print("Skipping Codeforces...")
+            break
+            
+        profile_data_CF = fetch_codeforces_profile_api(handle_CF)
+        if profile_data_CF is not None:
+            # Use the first valid handle as the user_id
+            user_id = handle_CF
+            # Add the user to the system
+            ranking_system.add_user(user_id)
+            break
+        else:
+            print("Failed to fetch Codeforces profile. Please try again or press Enter to skip.")
     
-    # Use the first valid handle as the user_id
-    user_id = handle_CF
-    # Add the user to the system
-    ranking_system.add_user(user_id)
+    if not user_id:
+        print("No valid user ID found. Please provide at least one valid platform handle.")
+        return
     
     # Process Codeforces
-    cf_rating = None
-    if profile_data_CF and profile_data_CF["rating"] != 'N/A':
-        cf_rating = int(profile_data_CF["rating"])
-        print(f"Codeforces Rating: {cf_rating}")
-    else:
-        print("Could not retrieve valid Codeforces rating. Imputing value.")
-        # Create a temporary user with platform ratings to impute this value
-        temp_user = User(user_id)
-        cf_rating = ranking_system._impute_missing_rating(temp_user, "Codeforces")
-        print(f"Imputed Codeforces Rating: {cf_rating}")
+    if handle_CF:
+        cf_rating = None
+        if profile_data_CF and profile_data_CF["rating"] != 'N/A':
+            cf_rating = int(profile_data_CF["rating"])
+            print(f"Codeforces Rating: {cf_rating}")
+        else:
+            print("Could not retrieve valid Codeforces rating. Imputing value.")
+            # Create a temporary user with platform ratings to impute this value
+            temp_user = User(user_id)
+            cf_rating = ranking_system._impute_missing_rating(temp_user, "Codeforces")
+            print(f"Imputed Codeforces Rating: {cf_rating}")
 
-    # Update Codeforces with real or imputed rating
-    ranking_system.update_platform_stats(
-        "Codeforces",
-        difficulty=2100,
-        participation=0.8,
-        current_ratings={user_id: cf_rating}
-    )
+        # Update Codeforces with real or imputed rating
+        ranking_system.update_platform_stats(
+            "Codeforces",
+            difficulty=2100,
+            participation=0.8,
+            current_ratings={user_id: cf_rating}
+        )
 
     # Fetch Leetcode profile
-    handle_LC = input("Enter Leetcode handle: ")
-    profile_data_LC = fetch_leetcode_profile(handle_LC)
-    lc_rating = None
-    if profile_data_LC and profile_data_LC["rating"] != 'N/A':
-        lc_rating = int(profile_data_LC["rating"])
-        print(f"Leetcode Rating: {lc_rating}")
-    else:
-        print("Could not retrieve valid Leetcode rating. Imputing value.")
-        lc_rating = ranking_system._impute_missing_rating(ranking_system.users[user_id], "Leetcode")
-        print(f"Imputed Leetcode Rating: {lc_rating}")
+    handle_LC = None
+    while True:
+        handle_LC = input("Enter Leetcode handle (or press Enter to skip): ").strip()
+        if not handle_LC:
+            print("Skipping Leetcode...")
+            break
+            
+        profile_data_LC = fetch_leetcode_profile(handle_LC)
+        if profile_data_LC is not None:
+            break
+        else:
+            print("Failed to fetch Leetcode profile. Please try again or press Enter to skip.")
+    
+    if handle_LC:
+        lc_rating = None
+        if profile_data_LC and profile_data_LC["rating"] != 'N/A':
+            lc_rating = int(profile_data_LC["rating"])
+            print(f"Leetcode Rating: {lc_rating}")
+        else:
+            print("Could not retrieve valid Leetcode rating. Imputing value.")
+            lc_rating = ranking_system._impute_missing_rating(ranking_system.users[user_id], "Leetcode")
+            print(f"Imputed Leetcode Rating: {lc_rating}")
 
-    # Update Leetcode with real or imputed rating
-    ranking_system.update_platform_stats(
-        "Leetcode",
-        difficulty=2100,
-        participation=0.8,
-        current_ratings={user_id: lc_rating}
-    )
+        # Update Leetcode with real or imputed rating
+        ranking_system.update_platform_stats(
+            "Leetcode",
+            difficulty=2100,
+            participation=0.8,
+            current_ratings={user_id: lc_rating}
+        )
 
     # Fetch CodeChef profile
-    handle_CC = input("Enter CodeChef handle: ")
-    profile_data_CC = fetch_codechef_profile(handle_CC)
-    cc_rating = None
-    if profile_data_CC and profile_data_CC["rating"] != 'N/A':
-        cc_rating = int(profile_data_CC["rating"])
-        print(f"CodeChef Rating: {cc_rating}")
-    else:
-        print("Could not retrieve valid CodeChef rating. Imputing value.")
-        cc_rating = ranking_system._impute_missing_rating(ranking_system.users[user_id], "CodeChef")
-        print(f"Imputed CodeChef Rating: {cc_rating}")
+    handle_CC = None
+    while True:
+        handle_CC = input("Enter CodeChef handle (or press Enter to skip): ").strip()
+        if not handle_CC:
+            print("Skipping CodeChef...")
+            break
+            
+        profile_data_CC = fetch_codechef_profile(handle_CC)
+        if profile_data_CC is not None:
+            break
+        else:
+            print("Failed to fetch CodeChef profile. Please try again or press Enter to skip.")
+    
+    if handle_CC:
+        cc_rating = None
+        if profile_data_CC and profile_data_CC["rating"] != 'N/A':
+            cc_rating = int(profile_data_CC["rating"])
+            print(f"CodeChef Rating: {cc_rating}")
+        else:
+            print("Could not retrieve valid CodeChef rating. Imputing value.")
+            cc_rating = ranking_system._impute_missing_rating(ranking_system.users[user_id], "CodeChef")
+            print(f"Imputed CodeChef Rating: {cc_rating}")
 
-    # Update CodeChef with real or imputed rating
-    ranking_system.update_platform_stats(
-        "CodeChef",
-        difficulty=3100,
-        participation=0.5,
-        current_ratings={user_id: cc_rating}
-    )
+        # Update CodeChef with real or imputed rating
+        ranking_system.update_platform_stats(
+            "CodeChef",
+            difficulty=3100,
+            participation=0.5,
+            current_ratings={user_id: cc_rating}
+        )
 
     # Handle AtCoder - Using imputation by default for this example
     print("No AtCoder API implemented, using imputation for AtCoder rating.")
@@ -145,6 +181,10 @@ def run():
 
     # Display combined heatmap
     draw_github_style_heatmap(combined_heatmap, title=f"{user_id}'s Coding Activity")
+    
+    # Run interactive Coursera section
+    run_interactive()
+    
     # Final Output
     print("\n===== Final Rankings =====")
     print(f"{'Rank':<5} {'User ID':<15} {'Platform Rating':<18} {'Course Bonus':<15} {'Total Rating':<15}")

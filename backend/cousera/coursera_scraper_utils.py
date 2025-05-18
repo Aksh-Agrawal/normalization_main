@@ -176,73 +176,271 @@ def extract_completed_courses(soup: BeautifulSoup) -> List[Dict[str, Any]]:
     completed_courses = []
     
     try:
-        # Look for course links - these are most reliable indicators of courses
-        course_links = []
+        # Method 1: Look for course sections and course containers
+        # These often have specific structure in Coursera profiles
+        course_sections = []
         
-        # Find all links on the page
-        all_links = soup.find_all('a')
-        for link in all_links:
-            href = link.get('href', '')
-            text = link.text.strip()
-            
-            # Only process links with text and href
-            if href and text and len(text) > 3:
-                # Coursera course links typically have these patterns
-                if ('learn/' in href or '/course/' in href or 'certificate' in href):
-                    # Skip links that are clearly not course-related
-                    if not any(skip in text.lower() for skip in ['sign in', 'log in', 'register', 'forgot', 'help', 'settings']):
-                        course_links.append(link)
+        # Find all section headers that might indicate course lists
+        section_headers = soup.find_all(['h2', 'h3'], string=lambda s: s and any(
+            keyword in str(s).lower() for keyword in ['course', 'learning', 'certificate', 'completed']
+        ))
         
-        # Process found links to extract course information
-        for link in course_links:
-            href = link.get('href', '')
-            title = link.text.strip()
+        # For each potential section header, find nearby course containers
+        for header in section_headers:
+            # Look at siblings and parent's children
+            parent = header.parent
+            if parent:
+                # Look for divs or sections that might contain course listings
+                container = parent.find_next(['div', 'section'])
+                if container:
+                    course_sections.append(container)
+        
+        # If no specific sections found, try the main content area
+        if not course_sections:
+            main_content = soup.find('main')
+            if main_content:
+                course_sections.append(main_content)
+            else:
+                # Look for any large containers that might hold courses
+                for container in soup.find_all(['div', 'section'], class_=True):
+                    # Skip small containers
+                    if len(str(container)) > 1000:
+                        course_sections.append(container)
+        
+        # Process each section to find course items
+        for section in course_sections:
+            # Look for items that might be course cards or course entries
+            course_items = section.find_all(['div', 'article', 'li'], 
+                                          attrs={'class': lambda c: c and any(
+                                              keyword in str(c).lower() for keyword in 
+                                              ['course', 'card', 'item', 'listing', 'entry', 'row']
+                                          )})
             
-            # Basic validation to avoid empty/too short titles
-            if title and len(title) > 3:
-                # Create course data structure
+            if not course_items:
+                # If no class-based items found, try looking for structured divs
+                course_items = section.find_all(['div'], recursive=False)
+                
+            # Process each potential course item
+            for item in course_items:
+                title_elem = None
+                institution_elem = None
+                date_elem = None
+                certificate_link = None
+                
+                # Look for course title (usually in h3, h4, strong, or div with specific classes)
+                title_candidates = item.find_all(['h3', 'h4', 'strong', 'div', 'span', 'p'], 
+                                                limit=5,
+                                                attrs={'class': lambda c: not c or not any(
+                                                    nav in str(c).lower() for nav in 
+                                                    ['time', 'date', 'institution', 'logo', 'partner', 'certificate']
+                                                )})
+                
+                for candidate in title_candidates:
+                    text = candidate.text.strip()
+                    if text and len(text) > 5 and len(text) < 150:
+                        # Skip navigation elements and common site sections
+                        nav_terms = ['menu', 'search', 'browse', 'login', 'sign in', 'technical skills', 
+                                    'analytical skills', 'business skills', 'career resources', 
+                                    'community', 'learn anywhere', 'copyright', 'rights reserved']
+                        if not any(term in text.lower() for term in nav_terms):
+                            title_elem = candidate
+                            break
+                
+                # If we found a title, extract the rest of the course data
+                if title_elem:
+                    # Look for institution (often near the title or in specific elements)
+                    inst_candidates = item.find_all(['div', 'span', 'img', 'p'], limit=5)
+                    for inst in inst_candidates:
+                        # Check for common institution indicators
+                        inst_text = inst.text.strip()
+                        institution_keywords = ['university', 'institute', 'ibm', 'google', 'amazon', 'aws', 
+                                            'microsoft', 'meta', 'coursera', 'deeplearning', 'stanford']
+                        
+                        if inst_text and any(keyword in inst_text.lower() for keyword in institution_keywords):
+                            if inst_text != title_elem.text.strip():  # Avoid using the title as institution
+                                institution_elem = inst
+                                break
+                    
+                    # Look for completion date
+                    date_candidates = item.find_all(['div', 'span', 'p'], 
+                                                 string=lambda s: s and any(
+                                                     date_word in str(s).lower() for date_word in 
+                                                     ['completed', 'january', 'february', 'march', 'april', 'may', 'june', 
+                                                      'july', 'august', 'september', 'october', 'november', 'december']
+                                                 ))
+                    if date_candidates:
+                        date_elem = date_candidates[0]
+                    
+                    # Look for certificate link
+                    for link in item.find_all('a'):
+                        href = link.get('href', '')
+                        link_text = link.text.strip().lower()
+                        if 'certificate' in href or 'certificate' in link_text or 'view' in link_text:
+                            certificate_link = link
+                            break
+                    
+                    # Create the course data structure
+                    course_data = {
+                        "title": title_elem.text.strip(),
+                        "institution": institution_elem.text.strip() if institution_elem else None,
+                        "completion_date": date_elem.text.strip() if date_elem else None,
+                        "duration": None,
+                        "certificate_url": certificate_link.get('href') if certificate_link else None,
+                        "course_url": None
+                    }
+                    
+                    # Clean up the completion date to remove "Completed" prefix
+                    if course_data["completion_date"] and "completed" in course_data["completion_date"].lower():
+                        course_data["completion_date"] = re.sub(
+                            r'completed\s*', '', course_data["completion_date"], flags=re.IGNORECASE
+                        ).strip()
+                    
+                    # Add to our list if it's a valid course (has title and isn't in the list yet)
+                    if course_data["title"] and course_data not in completed_courses:
+                        completed_courses.append(course_data)
+        
+        # Method 2: If we still don't have courses, look for "View certificate" links
+        if not completed_courses:
+            for link in soup.find_all('a'):
+                href = link.get('href', '')
+                text = link.text.strip().lower()
+                
+                if 'certificate' in text or 'certificate' in href.lower() or 'view' in text.lower():
+                    # Find the closest heading or strong text - likely a course title
+                    parent = link.parent
+                    
+                    # Go up a few levels to find context
+                    for _ in range(4):
+                        if not parent:
+                            break
+                            
+                        # Look for a title near this certificate link
+                        title_elems = parent.find_all(['h3', 'h4', 'strong', 'div', 'p'])
+                        for title_elem in title_elems:
+                            title = title_elem.text.strip()
+                            
+                            # Is this a good course title?
+                            if (title and title.lower() != 'certificate' and
+                                title.lower() != 'view certificate' and
+                                len(title) > 5 and len(title) < 150):
+                                
+                                # Create course data
+                                course_data = {
+                                    "title": title,
+                                    "institution": None,
+                                    "completion_date": None,
+                                    "duration": None,
+                                    "certificate_url": href if 'certificate' in href.lower() else None,
+                                    "course_url": None
+                                }
+                                
+                                # Look for institution name
+                                for elem in parent.find_all(['span', 'div', 'p']):
+                                    text = elem.text.strip()
+                                    inst_keywords = ['university', 'institute', 'ibm', 'google', 'amazon',
+                                                'microsoft', 'meta', 'coursera']
+                                    if text and any(keyword in text.lower() for keyword in inst_keywords):
+                                        if text != title:  # Don't use title as institution
+                                            course_data["institution"] = text
+                                            break
+                                
+                                # Look for completion date
+                                for elem in parent.find_all(['span', 'div', 'p']):
+                                    text = elem.text.strip().lower()
+                                    if ('completed' in text or
+                                        any(month in text for month in ['january', 'february', 'march', 'april', 'may', 'june',
+                                                                   'july', 'august', 'september', 'october', 'november', 'december'])):
+                                        if 'completed' in text:
+                                            course_data["completion_date"] = text.replace('completed', '').strip()
+                                        else:
+                                            course_data["completion_date"] = text
+                                        break
+                                
+                                # Add to our list if not already there
+                                if course_data not in completed_courses:
+                                    completed_courses.append(course_data)
+                                break
+                                
+                        parent = parent.parent
+        
+        # Method 3: Look for course titles directly
+        if not completed_courses:
+            # Find all elements that might be course titles
+            potential_titles = []
+            
+            # Common course keywords
+            course_keywords = [
+                'python', 'machine learning', 'data science', 'ai', 'artificial intelligence',
+                'programming', 'development', 'web', 'app', 'mobile', 'cloud', 'security',
+                'devops', 'deep learning', 'statistics', 'analytics', 'engineering', 'design',
+                'leadership', 'management', 'business', 'marketing', 'finance', 'blockchain',
+                'specialization', 'certificate', 'professional'
+            ]
+            
+            # Find elements that might contain course titles
+            for elem in soup.find_all(['h3', 'h4', 'strong', 'div', 'p']):
+                text = elem.text.strip()
+                
+                if (text and len(text) > 10 and len(text) < 150 and
+                    any(keyword in text.lower() for keyword in course_keywords)):
+                    
+                    # Avoid navigation elements
+                    parent = elem.parent
+                    is_navigation = False
+                    if parent:
+                        parent_classes = parent.get('class', [])
+                        if parent_classes:
+                            parent_class_str = ' '.join(parent_classes).lower()
+                            if any(nav in parent_class_str for nav in ['nav', 'menu', 'header', 'footer']):
+                                is_navigation = True
+                    
+                    if not is_navigation:
+                        potential_titles.append(elem)
+            
+            # Process each potential title
+            for title_elem in potential_titles:
+                title = title_elem.text.strip()
+                
+                # Create course data
                 course_data = {
                     "title": title,
                     "institution": None,
                     "completion_date": None,
                     "duration": None,
-                    "certificate_url": href if 'certificate' in href.lower() else None,
-                    "course_url": href if 'certificate' not in href.lower() else None
+                    "certificate_url": None,
+                    "course_url": None
                 }
                 
-                # Try to find institution by looking at nearby elements
-                parent = link.parent
+                # Look for related information in nearby elements
+                parent = title_elem.parent
                 if parent:
-                    # Look for institution in siblings or parent's siblings
-                    for sibling in list(parent.next_siblings)[:3]:
+                    # Find institution
+                    for sibling in list(parent.next_siblings)[:5] + list(parent.previous_siblings)[:5]:
                         if hasattr(sibling, 'text'):
-                            sib_text = sibling.text.strip()
-                            # Institution names are typically shorter
-                            if sib_text and 3 <= len(sib_text) <= 50:
-                                course_data["institution"] = sib_text
+                            text = sibling.text.strip()
+                            inst_keywords = ['university', 'institute', 'ibm', 'google', 'amazon',
+                                        'microsoft', 'meta', 'coursera']
+                            if text and any(keyword in text.lower() for keyword in inst_keywords):
+                                if text != title:  # Avoid using title as institution
+                                    course_data["institution"] = text
+                                    break
+                    
+                    # Find completion date
+                    for sibling in list(parent.next_siblings)[:5] + list(parent.previous_siblings)[:5]:
+                        if hasattr(sibling, 'text'):
+                            text = sibling.text.strip().lower()
+                            if ('completed' in text or
+                                any(month in text for month in ['january', 'february', 'march', 'april', 'may', 'june',
+                                                           'july', 'august', 'september', 'october', 'november', 'december'])):
+                                if 'completed' in text:
+                                    course_data["completion_date"] = text.replace('completed', '').strip()
+                                else:
+                                    course_data["completion_date"] = text
                                 break
                 
-                # Look for completion date in nearby text
-                if parent:
-                    parent_text = parent.get_text()
-                    # Try to find dates using regex
-                    date_patterns = [
-                        r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]* \d{4}',  # Month Year
-                        r'\d{1,2}/\d{1,2}/\d{2,4}',  # MM/DD/YYYY
-                        r'\d{4}-\d{1,2}-\d{1,2}'  # YYYY-MM-DD
-                    ]
-                    
-                    for pattern in date_patterns:
-                        match = re.search(pattern, parent_text)
-                        if match:
-                            course_data["completion_date"] = match.group(0)
-                            break
-                
-                # Add the course data to our list if it has at least a title and URL
-                if course_data["title"] and (course_data["certificate_url"] or course_data["course_url"]):
-                    # Avoid duplicates
-                    if course_data not in completed_courses:
-                        completed_courses.append(course_data)
+                # Only add if not a duplicate
+                if course_data not in completed_courses:
+                    completed_courses.append(course_data)
                 
     except Exception as e:
         logger.error(f"Error extracting completed courses: {e}")
