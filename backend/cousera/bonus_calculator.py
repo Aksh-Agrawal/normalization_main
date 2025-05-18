@@ -27,7 +27,7 @@ from typing import Dict, Any, List
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
+total_bonus_sum = 0
 # Institution reputation scores (higher = more prestigious)
 INSTITUTION_SCORES = {
     # Top Tier Universities (9-10)
@@ -907,6 +907,14 @@ def calculate_course_bonus(course: Dict[str, Any]) -> Dict[str, Any]:
     result["bonus_percentage"] = round(bonus_percentage, 1)
     result["bonus_breakdown"] = bonus_breakdown
     
+    # Print total bonus points and breakdown
+    print(f"\nTotal Bonus Points: {total_points:.1f} / {max_possible_points} ({bonus_percentage:.1f}%)")
+    print("Bonus Breakdown:")
+    print(f"  Institution: {bonus_breakdown['institution']:.1f}")
+    print(f"  Duration: {bonus_breakdown['duration']:.1f}")
+    print(f"  Field: {bonus_breakdown['field']:.1f}")
+    print(f"  Skills: {bonus_breakdown['skills']:.1f}")
+    
     return result
 
 def calculate_profile_bonus(profile_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -924,9 +932,15 @@ def calculate_profile_bonus(profile_data: Dict[str, Any]) -> Dict[str, Any]:
     
     # Calculate bonus for each course
     courses_with_bonus = []
+    total_bonus_sum = 0
     for course in profile_data.get("completed_courses", []):
         course_with_bonus = calculate_course_bonus(course)
         courses_with_bonus.append(course_with_bonus)
+        total_bonus_sum += course_with_bonus.get("bonus_points", 0)
+    
+    # Print the total sum of all bonus points
+    print(f"\nTotal Sum of All Bonus Points: {total_bonus_sum:.1f}")
+
     
     # Sort courses by bonus points (highest first)
     courses_with_bonus.sort(key=lambda x: x.get("bonus_points", 0), reverse=True)
