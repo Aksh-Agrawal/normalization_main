@@ -12,7 +12,7 @@ import json
 import time
 import logging
 from .interactive_scraper import main as scraper_main
-from .bonus_calculator import calculate_from_scraper_result, print_bonus_summary
+from bonus_calculatorF.bonus_calculator import calculate_from_scraper_result, print_bonus_summary
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

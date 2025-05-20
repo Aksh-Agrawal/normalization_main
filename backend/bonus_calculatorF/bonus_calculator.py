@@ -1223,8 +1223,8 @@ def main():
     # If no file is provided, try to get data from the scraper
     try:
         # Try to import the scraper
-        from friendly_scraper import main as run_scraper
-        from coursera_scraper import scrape_coursera_profile
+        from cousera.friendly_scraper import main as run_scraper
+        from cousera.coursera_scraper import scrape_coursera_profile
         
         print("\n=== Coursera Bonus Calculator ===")
         print("This tool calculates bonus points for Coursera courses based on")

@@ -1,7 +1,7 @@
-from formula_main import UnifiedRankingSystem, User
-from CodeForces_api import fetch_codeforces_profile_api
-from leetcode_api import fetch_leetcode_profile
-from CodeChef_api import fetch_codechef_profile
+from logic_formulas.formula_main import UnifiedRankingSystem, User
+from rating_scraper_api.CodeForces_api import fetch_codeforces_profile_api
+from rating_scraper_api.leetcode_api import fetch_leetcode_profile
+from rating_scraper_api.CodeChef_api import fetch_codechef_profile
 # from course_credential_manager import CourseCredentialManager
 # from cousera.main_scrapper import run_scraper
 from cousera.run import run_interactive
@@ -12,7 +12,7 @@ from heatmap.heat_map import (
     combine_heatmaps,
     draw_github_style_heatmap,
 )
-from cousera import bonus_calculator
+from bonus_calculatorF import bonus_calculator
 
 
 def run():
