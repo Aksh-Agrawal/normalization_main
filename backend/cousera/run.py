@@ -18,10 +18,13 @@ from bonus_calculatorF.bonus_calculator import calculate_from_scraper_result, pr
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def main():
+def main(profile_url):
     """
     Run the Coursera Profile Scraper and Bonus Calculator in sequence.
     First scrape the profile, then calculate bonus points for the courses.
+    
+    Args:
+        profile_url (str): The URL of the Coursera profile to analyze
     """
     try:
         # Welcome message
@@ -30,7 +33,7 @@ def main():
         print("and calculates bonus points for each course based on multiple factors.")
         
         # Run the scraper to get profile data
-        profile_data = run_scraper()
+        profile_data = run_scraper(profile_url)
         
         if profile_data:
             # Calculate bonus points
@@ -76,7 +79,7 @@ def main():
     
     return 0
 
-def run_scraper():
+def run_scraper(profile_url):
     """Run the interactive scraper and return the profile data"""
     # We'll create a custom scraper function that returns the data instead of displaying it
     from .coursera_scraper import scrape_coursera_profile, validate_coursera_url
@@ -84,11 +87,11 @@ def run_scraper():
     try:
         # Get profile URL from user
         print("\n=== Coursera Profile Scraper ===")
-        print("Enter a Coursera profile URL to begin (e.g., https://www.coursera.org/user/123456)")
-        print("Or press Enter to use a demo profile\n")
+        # print("Enter a Coursera profile URL to begin (e.g., https://www.coursera.org/user/123456)")
+        # print("Or press Enter to use a demo profile\n")
         
         try:
-            profile_url = input("Profile URL: ").strip()
+            profile_url = profile_url.strip()
         except EOFError:
             # If we get EOF error (e.g., when running in an automated environment)
             print("Using demo profile due to input error")
@@ -138,8 +141,8 @@ def run_scraper():
         print("Using demo profile due to error")
         return scrape_coursera_profile("https://www.coursera.org/user/example123", use_mock=True)
 
-def run_interactive():
-    return main()
+def run_interactive(profile_url):
+    return main(profile_url)
 
 if __name__ == "__main__":
     sys.exit(run_interactive())

@@ -184,7 +184,11 @@ def run():
     
     # Run interactive Coursera section and get bonus
     print("\n===== Calculating Course Bonus =====")
-    course_data = run_interactive()
+    profile_url = input(" #Enter Coursera profile URL: ").strip()
+    if not profile_url:
+        print("No URL provided. Exiting.")
+        return
+    course_data = run_interactive(profile_url)
     
     # Get the updated global bonus sum
     total_bonus = bonus_calculator.total_bonus_sum
