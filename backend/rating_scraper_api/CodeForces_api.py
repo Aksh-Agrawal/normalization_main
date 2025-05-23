@@ -9,21 +9,27 @@ def fetch_codeforces_profile_api(handle):
     }
 
     try:
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=10)
         response.raise_for_status()
         data = response.json()
         
         if data['status'] != 'OK':
             print(f"API error: {data.get('comment', 'Unknown error')}")
-            return None
+            return {'error': data.get('comment', 'Unknown error'), 'rating': 'N/A', 'handle': handle}
         
         user = data['result'][0]
         return {
-            'rating': str(user.get('rating', 'N/A'))
+            'rating': str(user.get('rating', 'N/A')),
+            'handle': handle,
+            'rank': user.get('rank', 'N/A'),
+            'maxRating': str(user.get('maxRating', 'N/A'))
         }
     except requests.RequestException as e:
         print(f"Error fetching profile via API: {e}")
-        return None
+        return {'error': str(e), 'rating': 'N/A', 'handle': handle}
+    except Exception as e:
+        print(f"Unexpected error with Codeforces API: {e}")
+        return {'error': str(e), 'rating': 'N/A', 'handle': handle}
 
 
 def print_profile(profile):
