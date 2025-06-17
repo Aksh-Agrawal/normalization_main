@@ -5,29 +5,6 @@ const cheerio = require('cheerio');
 function validateCoureraUrl(url) {
   if (!url || typeof url !== 'string') return false;
   return url.includes('coursera.org/user/');
-}
-
-function generateMockData() {
-  return {
-    courses: [
-      {
-        name: 'Machine Learning Specialization',
-        completion: '2023-12-15',
-        grade: 'Pass with Distinction',
-        certificate: 'https://coursera.org/verify/ML123'
-      },
-      {
-        name: 'Deep Learning Specialization',
-        completion: '2023-11-30',
-        grade: 'Pass',
-        certificate: 'https://coursera.org/verify/DL456'
-      }
-    ],
-    totalCourses: 2,
-    scrapedAt: new Date().toISOString(),
-    isMockData: true
-  };
-}
 
 async function scrapeCoureraProfile(url, useMock = false) {
   if (useMock) return generateMockData();

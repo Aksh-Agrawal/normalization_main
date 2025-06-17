@@ -1,0 +1,39 @@
+{
+  "user_info": {
+    "name": "John Doe",
+    "profile_url": "https://www.coursera.org/user/johndoe",
+    "location": "San Francisco, CA"
+  },
+  "completed_courses": [
+    {
+      "title": "Machine Learning",
+      "institution": "Stanford University",
+      "completion_date": "2024-08-15",
+      "certificate_url": "https://www.coursera.org/account/accomplishments/certificate/ABC123"
+    },
+    {
+      "title": "Deep Learning Specialization",
+      "institution": "DeepLearning.AI",
+      "completion_date": "2024-09-20",
+      "certificate_url": "https://www.coursera.org/account/accomplishments/specialization/DEF456"
+    },
+    {
+      "title": "Data Structures and Algorithms",
+      "institution": "University of California, San Diego",
+      "completion_date": "2024-07-10",
+      "certificate_url": "https://www.coursera.org/account/accomplishments/certificate/GHI789"
+    },
+    {
+      "title": "Python for Everybody",
+      "institution": "University of Michigan",
+      "completion_date": "2024-06-05",
+      "certificate_url": "https://www.coursera.org/account/accomplishments/specialization/JKL012"
+    }
+  ],
+  "profile_metrics": {
+    "total_bonus_points": 450,
+    "average_bonus_points": 112.5,
+    "max_bonus_points": 150,
+    "course_count": 4
+  }
+}
