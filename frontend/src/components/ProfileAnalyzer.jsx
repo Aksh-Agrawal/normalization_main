@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+// Configure axios to use the backend API URL
+axios.defaults.baseURL = "http://localhost:5001";
+
 const ProfileAnalyzer = ({ onAnalysisComplete, loading, setLoading }) => {
   const [formData, setFormData] = useState({
     codeforces: "",

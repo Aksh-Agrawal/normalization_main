@@ -3,6 +3,9 @@ import axios from "axios";
 import CalendarHeatmap from "react-calendar-heatmap";
 import "react-calendar-heatmap/dist/styles.css";
 
+// Configure axios to use the backend API URL
+axios.defaults.baseURL = "http://localhost:5001";
+
 const HeatmapViewer = () => {
   const [formData, setFormData] = useState({
     codeforces: "",

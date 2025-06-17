@@ -11,7 +11,7 @@ export default defineConfig({
     port: 5000,
     proxy: {
       "/api": {
-        target: "http://localhost:5000",
+        target: "http://localhost:5001",
         changeOrigin: true,
       },
     },
@@ -24,8 +24,11 @@ export default defineConfig({
         main: resolve(__dirname, "public/index.html"),
       },
     },
+    assetsDir: "assets",
+    manifest: true,
   },
   resolve: {
     extensions: [".mjs", ".js", ".jsx", ".json"],
   },
+  base: "/",
 });

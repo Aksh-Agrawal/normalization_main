@@ -17,7 +17,7 @@ const Results = ({ data }) => {
 
   if (!data || !data.success) {
     return (
-      <div className="card">
+      <div className="card" style={{ background: "white" }}>
         <div className="error">
           ⚠️ No results to display. Please run an analysis first.
         </div>
