@@ -2,9 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const { UnifiedRankingSystem } = require("./logic_formulas/formula_main");
-const {
-  fetchCodeForcesProfile,
-} = require("./rating_scraper_api/codeforces_api");
+const { fetchCodeForcesProfile } = require("./rating_scraper_api/codeforces_api");
 const { fetchLeetCodeProfile } = require("./rating_scraper_api/leetcode_api");
 const { fetchCodeChefProfile } = require("./rating_scraper_api/codechef_api");
 const { runInteractive } = require("./cousera/run");
@@ -14,10 +12,11 @@ const heatmapUtils = require("./heatmap/heat_map");
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// API routes
+// Analyze Profile Route
 app.post("/api/analyze-profile", async (req, res) => {
   try {
     const { codeforces, leetcode, codechef, coursera } = req.body;
@@ -28,10 +27,10 @@ app.post("/api/analyze-profile", async (req, res) => {
     // Add platforms
     rankingSystem.addPlatform("Codeforces", 3000);
     rankingSystem.addPlatform("Leetcode", 2500);
-    rankingSystem.addPlatform("Atcoder", 2800);
+    rankingSystem.addPlatform("Atcoder", 2800);  // Placeholder
     rankingSystem.addPlatform("CodeChef", 1800);
 
-    // Process each platform
+    // Codeforces
     if (codeforces) {
       const cfData = await fetchCodeForcesProfile(codeforces);
       if (cfData && cfData.rating !== "N/A") {
@@ -43,6 +42,7 @@ app.post("/api/analyze-profile", async (req, res) => {
       }
     }
 
+    // Leetcode
     if (leetcode) {
       const lcData = await fetchLeetCodeProfile(leetcode);
       if (lcData && lcData.rating !== "N/A") {
@@ -56,6 +56,7 @@ app.post("/api/analyze-profile", async (req, res) => {
       }
     }
 
+    // Codechef
     if (codechef) {
       const ccData = await fetchCodeChefProfile(codechef);
       if (ccData && ccData.rating !== "N/A") {
@@ -69,7 +70,7 @@ app.post("/api/analyze-profile", async (req, res) => {
       }
     }
 
-    // Get course bonus if Coursera profile provided
+    // Coursera Bonus
     let courseBonus = 0;
     if (coursera) {
       const courseData = await runInteractive(coursera);
@@ -92,30 +93,29 @@ app.post("/api/analyze-profile", async (req, res) => {
   }
 });
 
-// Heatmap endpoint
+// Heatmap Route
 app.post("/api/heatmap", async (req, res) => {
   try {
     const { codeforces, leetcode, codechef } = req.body;
+    const useMock = !codeforces && !leetcode && !codechef;
 
-    const heatmaps = {};
+    const heatmaps = {
+      leetcode: leetcode ? await heatmapUtils.getLeetCodeHeatmap(leetcode, useMock) : {},
+      codeforces: codeforces ? await heatmapUtils.getCodeForcesHeatmap(codeforces, useMock) : {},
+      codechef: codechef ? await heatmapUtils.getCodeChefHeatmap(codechef, useMock) : {},
+    };
 
-    if (codeforces) {
-      heatmaps.codeforces = await heatmapUtils.getCodeForcesHeatmap(codeforces);
-    }
-
-    if (leetcode) {
-      heatmaps.leetcode = await heatmapUtils.getLeetCodeHeatmap(leetcode);
-    }
-
-    if (codechef) {
-      heatmaps.codechef = await heatmapUtils.getCodeChefHeatmap(codechef);
-    }
-
-    const combined = heatmapUtils.combineHeatmaps(Object.values(heatmaps));
+    const combined = heatmapUtils.combineHeatmaps(
+      heatmaps.leetcode,
+      heatmaps.codeforces,
+      heatmaps.codechef
+    );
 
     res.json({
       success: true,
-      heatmaps,
+      leetcode: heatmaps.leetcode,
+      codeforces: heatmaps.codeforces,
+      codechef: heatmaps.codechef,
       combined,
     });
   } catch (error) {
@@ -124,14 +124,15 @@ app.post("/api/heatmap", async (req, res) => {
   }
 });
 
-// Serve static files from the React app build directory
+// Serve React build
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-// Serve the index.html for any route that doesn't match an API endpoint or static file
+// React fallback for SPA routing
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
 });
 
+// Start server
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
