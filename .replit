@@ -23,6 +23,19 @@ args = "cd backend-js && npm install && npm start &"
 task = "shell.exec"
 args = "cd frontend && npm start"
 
+[[workflows.workflow]]
+name = "Start Development"
+author = 43070965
+mode = "parallel"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd backend-js && npm install && npm start &"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "cd frontend && npm install && npm run dev"
+
 [[ports]]
 localPort = 3000
 externalPort = 3000
