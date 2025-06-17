@@ -1,6 +1,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { UnifiedRankingSystem } = require('./logic_formulas/formula_main');
 const { fetchCodeForcesProfile } = require('./rating_scraper_api/codeforces_api');
 const { fetchLeetCodeProfile } = require('./rating_scraper_api/leetcode_api');
@@ -14,6 +15,16 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+// Serve static files from the React app build directory
+app.use(express.static('../frontend/build'));
+
+// Catch all handler: send back React's index.html file for any non-API routes
+app.get('*', (req, res) => {
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+  }
+});
 
 // Main analysis endpoint
 app.post('/api/analyze-profile', async (req, res) => {
