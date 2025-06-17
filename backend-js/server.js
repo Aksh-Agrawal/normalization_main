@@ -17,12 +17,12 @@ app.use(cors());
 app.use(express.json());
 
 // Serve static files from the React app build directory
-app.use(express.static('../frontend/build'));
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 // Catch all handler: send back React's index.html file for any non-API routes
 app.get('*', (req, res) => {
   if (!req.path.startsWith('/api')) {
-    res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+    res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
   }
 });
 
