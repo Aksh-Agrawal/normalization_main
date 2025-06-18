@@ -2,7 +2,6 @@
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![Python](https://img.shields.io/badge/Python-3.11-green)
-![License](https://img.shields.io/badge/license-MIT-orange)
 ![React](https://img.shields.io/badge/React-18.2.0-61dafb)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.3.2-38bdf8)
 ![Last Updated](https://img.shields.io/badge/last%20updated-June%2017%2C%202023-brightgreen)
