@@ -447,5 +447,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <div align="center">
 Created with ❤️ for competitive programmers worldwide.
 <br>
-© 2023 Coding Profile Analyzer | Last Updated: June 17, 2023
 </div>
