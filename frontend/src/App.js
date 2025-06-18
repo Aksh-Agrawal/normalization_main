@@ -1,13 +1,38 @@
-import React, { useState } from "react";
-import ProfileViewer from './ProfileViewer';
-import ProfileAnalyzer from './ProfileAnalyzer';
-import HeatmapViewer from './HeatmapViewer';
-import Results from './Results';
+/**
+ * Coding Profile Analyzer - Main Application
+ *
+ * This is the main component that handles the tab navigation and
+ * renders the appropriate components based on the active tab.
+ *
+ * Features:
+ * - Profile Analyzer: Input handles for different coding platforms
+ * - Activity Heatmap: Visualization of coding activity
+ * - Profile Viewer: View Coursera course completions
+ * - Results: Display normalized ratings across platforms
+ */
+
+import React, { useState, useEffect } from "react";
+import ProfileAnalyzer from "./components/ProfileAnalyzer";
+import HeatmapViewer from "./components/HeatmapViewer";
+import Results from "./components/Results";
+import ProfileViewer from "./components/ProfileViewer";
+import "./index.css";
 
 function App() {
   const [activeTab, setActiveTab] = useState("analyzer");
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Update document title based on active tab
+    const titles = {
+      analyzer: "Profile Analyzer | Coding Profile Analyzer",
+      heatmap: "Activity Heatmap | Coding Profile Analyzer",
+      profile: "Profile Viewer | Coding Profile Analyzer",
+      results: "Analysis Results | Coding Profile Analyzer",
+    };
+    document.title = titles[activeTab] || "Coding Profile Analyzer";
+  }, [activeTab]);
 
   const handleAnalysisComplete = (data) => {
     setResults(data);
@@ -15,8 +40,8 @@ function App() {
   };
 
   return (
-    <div>
-      <header>
+    <div className="container">
+      <header style={{ textAlign: "center", marginBottom: "30px" }}>
         <h1
           style={{
             fontSize: "2.5rem",

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import ProfileAnalyzer from "./components/ProfileAnalyzer.jsx";
-import HeatmapViewer from "./components/HeatmapViewer.jsx";
-import Results from "./components/Results.jsx";
+import ProfileAnalyzer from "./components/ProfileAnalyzer";
+import HeatmapViewer from "./components/HeatmapViewer";
+import Results from "./components/Results";
+import ProfileViewer from "./components/ProfileViewer";
 import "./index.css";
 
 function App() {
@@ -37,8 +38,7 @@ function App() {
         >
           Unified rating system for competitive programming platforms
         </p>
-      </header>
-
+      </header>{" "}
       <nav className="tabs">
         <div
           className={`tab ${activeTab === "analyzer" ? "active" : ""}`}
@@ -52,6 +52,12 @@ function App() {
         >
           🔥 Activity Heatmap
         </div>
+        <div
+          className={`tab ${activeTab === "profile" ? "active" : ""}`}
+          onClick={() => setActiveTab("profile")}
+        >
+          👤 Profile Viewer
+        </div>
         {results && (
           <div
             className={`tab ${activeTab === "results" ? "active" : ""}`}
@@ -60,8 +66,7 @@ function App() {
             📈 Results
           </div>
         )}
-      </nav>
-
+      </nav>{" "}
       <main>
         {activeTab === "analyzer" && (
           <ProfileAnalyzer
@@ -73,9 +78,10 @@ function App() {
 
         {activeTab === "heatmap" && <HeatmapViewer />}
 
+        {activeTab === "profile" && <ProfileViewer />}
+
         {activeTab === "results" && results && <Results data={results} />}
       </main>
-
       <footer
         style={{
           textAlign: "center",

@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "vite --host 0.0.0.0 --port 5000"
+    "start": "vite --host 0.0.0.0 --port 5000",
+    "cleanup": "node cleanup.js",
+    "lint": "eslint . --ext .js,.jsx",
+    "setup-tailwind": "node install-tailwind.js",
+    "css-watch": "npx tailwindcss -i ./src/index.css -o ./public/output.css --watch"
   },
   "dependencies": {
     "axios": "^1.6.0",
@@ -20,6 +24,9 @@
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.3",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^3.3.2",
     "vite": "^6.3.5"
   }
 }

@@ -121,88 +121,80 @@ const HeatmapViewer = () => {
       codechef: "gennady.korotkevich",
     });
   };
-
   return (
-    <div className="card">
-      <h2 style={{ marginBottom: "20px", color: "#333" }}>
+    <div className="bg-white rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
+      <h2 className="text-2xl font-semibold mb-5 text-gray-800">
         🔥 Coding Activity Heatmap
       </h2>
 
       <form onSubmit={handleSubmit}>
-        <div className="form-row">
-          <div className="form-group">
-            <label className="form-label">🏁 Codeforces Username</label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              🏁 Codeforces Username
+            </label>
             <input
               type="text"
               name="codeforces"
               value={formData.codeforces}
               onChange={handleInputChange}
               placeholder="e.g., tourist"
-              className="input"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
               disabled={loading}
             />
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">💻 LeetCode Username</label>
+          </div>{" "}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              💻 LeetCode Username
+            </label>
             <input
               type="text"
               name="leetcode"
               value={formData.leetcode}
               onChange={handleInputChange}
               placeholder="e.g., lee215"
-              className="input"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
               disabled={loading}
             />
           </div>
         </div>
-
-        <div className="form-group">
-          <label className="form-label">🍳 CodeChef Username</label>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            🍳 CodeChef Username
+          </label>
           <input
             type="text"
             name="codechef"
             value={formData.codechef}
             onChange={handleInputChange}
             placeholder="e.g., gennady.korotkevich"
-            className="input"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             disabled={loading}
           />
-        </div>
-
-        {error && <div className="error">⚠️ {error}</div>}
-
-        <div
-          style={{
-            display: "flex",
-            gap: "12px",
-            justifyContent: "center",
-            marginTop: "24px",
-          }}
-        >
+        </div>{" "}
+        {error && (
+          <div className="text-red-500 bg-red-50 p-3 rounded-md mb-4">
+            ⚠️ {error}
+          </div>
+        )}
+        <div className="flex flex-wrap gap-4 justify-center mt-6">
           <button
             type="button"
             onClick={handleDemo}
-            className="button"
+            className="px-5 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 disabled:opacity-50"
             disabled={loading}
-            style={{ background: "#95a5a6" }}
           >
             🎮 Try Demo Data
           </button>
 
-          <button type="submit" className="button" disabled={loading}>
+          <button
+            type="submit"
+            className="px-5 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 flex items-center"
+            disabled={loading}
+          >
             {loading ? (
               <>
-                <span
-                  className="spinner"
-                  style={{
-                    width: "16px",
-                    height: "16px",
-                    marginRight: "8px",
-                    border: "2px solid #ffffff40",
-                    borderTop: "2px solid #ffffff",
-                  }}
-                ></span>
+                <span className="inline-block w-4 h-4 mr-2 rounded-full border-2 border-white/40 border-t-white animate-spin"></span>
                 Generating...
               </>
             ) : (

@@ -3,11 +3,13 @@
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![Python](https://img.shields.io/badge/Python-3.11-green)
 ![License](https://img.shields.io/badge/license-MIT-orange)
-![Last Updated](https://img.shields.io/badge/last%20updated-June%2017%2C%202025-brightgreen)
+![React](https://img.shields.io/badge/React-18.2.0-61dafb)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.3.2-38bdf8)
+![Last Updated](https://img.shields.io/badge/last%20updated-June%2017%2C%202023-brightgreen)
 
-A comprehensive Python-based web application that analyzes coding profiles from various
+A comprehensive full-stack web application that analyzes coding profiles from various competitive programming platforms and provides a unified rating system with intelligent metrics.
 
-> 🚀 **Latest Update**: Added smarter rating imputation system for handling missing platform data.
+> 🚀 **Latest Update**: Added smarter rating imputation system for handling missing platform data and Tailwind CSS for modern UI.
 
 ## ✨ Features
 
@@ -19,6 +21,7 @@ A comprehensive Python-based web application that analyzes coding profiles from 
 - 🔌 **API Integration**: Seamless integration with various platform APIs
 - 🕸️ **Web Scraping**: Extract data from platforms without public APIs
 - 🔄 **Automatic Updates**: System adapts to platform rating changes and algorithm updates
+- 🎨 **Modern UI**: Responsive and clean interface built with React and Tailwind CSS
 
 ## Project Structure
 
@@ -27,10 +30,9 @@ normalization_main/
 ├── README.md               # Project documentation
 ├── improve.md              # Future improvements list
 ├── start.bat               # Windows batch file to start the application
-├── backend/                # Main Flask backend application
-│   ├── app.py              # Flask application entry point
+├── backend/                # Flask backend application
+│   ├── main.py             # Main application entry point
 │   ├── dockerfile          # Docker configuration for containerization
-│   ├── main.py             # Secondary application entry point
 │   ├── requirements.txt    # Python dependencies
 │   ├── bonus_calculatorF/  # Coursera certificate bonus calculation system
 │   │   └── bonus_calculator.py  # Advanced bonus point calculation algorithms
@@ -55,6 +57,20 @@ normalization_main/
 │       ├── CodeChef_api.py   # CodeChef API integration
 │       ├── CodeForces_api.py # Codeforces API integration
 │       └── leetcode_api.py   # LeetCode API integration
+├── frontend/              # React frontend application
+│   ├── src/               # Source code
+│   │   ├── App.js(x)      # Main application component
+│   │   ├── index.js(x)    # Entry point
+│   │   ├── index.css      # Global styles with Tailwind directives
+│   │   └── components/    # React components
+│   │       ├── ProfileAnalyzer.jsx    # Profile analysis form
+│   │       ├── ProfileViewer.jsx      # Profile data display
+│   │       ├── HeatmapViewer.jsx      # Activity heatmap visualization
+│   │       └── Results.jsx            # Analysis results display
+│   ├── public/            # Static files
+│   ├── tailwind.config.js # Tailwind CSS configuration
+│   ├── postcss.config.js  # PostCSS configuration
+│   └── package.json       # Frontend dependencies and scripts
 ```
 
 ## 🔍 Demo
@@ -97,6 +113,19 @@ normalization_main/
 | Selenium          | 4.16.0  | Automated browser interaction for web scraping   |
 | WebDriver Manager | 4.0.1   | Simplified WebDriver management                  |
 
+### 🎨 Frontend
+
+| Technology             | Version | Purpose                                         |
+| ---------------------- | ------- | ----------------------------------------------- |
+| React                  | 18.2.0  | JavaScript library for building user interfaces |
+| Axios                  | 1.6.0   | Promise-based HTTP client for API requests      |
+| Recharts               | 2.8.0   | Composable charting library for visualizations  |
+| React Calendar Heatmap | 1.9.0   | GitHub-style heatmap component                  |
+| Tailwind CSS           | 3.3.2   | Utility-first CSS framework for styling         |
+| PostCSS                | 8.4.24  | Tool for transforming CSS with JavaScript       |
+| Autoprefixer           | 10.4.14 | Plugin to parse CSS and add vendor prefixes     |
+| Vite                   | 6.3.5   | Next-generation frontend build tool             |
+
 ### Key Components
 
 #### Unified Ranking System (URS)
@@ -104,7 +133,7 @@ normalization_main/
 - Advanced algorithm for normalizing ratings across different platforms
 - Dynamic weight calculation based on platform difficulty, participation, and drift
 - Adaptive temporal decay for rating relevance
-- Intelligent missing rating imputation
+- Intelligent missing rating imputation when user enters "N/A" for a platform
 
 #### Coursera Bonus Calculator
 
@@ -113,12 +142,14 @@ normalization_main/
 - Topic relevance and industry demand assessment
 - Skills market value analysis
 - Difficulty and specialization level consideration
+- Integrated with the coursera scraper for automatic bonus calculation
 
 #### Activity Visualization
 
 - GitHub-style heatmaps for coding activity
 - Aggregated multi-platform activity visualization
 - Temporal analysis of coding frequency
+- Interactive UI with custom data filtering options
 
 ## 🚀 Setup and Installation
 
@@ -127,7 +158,8 @@ normalization_main/
 | Requirement | Version            |
 | ----------- | ------------------ |
 | Python      | 3.8 or higher      |
-| pip         | Latest             |
+| Node.js     | 14.0 or higher     |
+| npm/yarn    | Latest             |
 | Web browser | Any modern browser |
 
 ### Quick Start Guide
@@ -148,28 +180,37 @@ start.bat
    cd normalization_main
    ```
 
-2. **Set up virtual environment** (recommended):
+2. **Set up backend**:
 
    ```bash
+   # Set up virtual environment (recommended)
    python -m venv venv
    # On Windows
    .\venv\Scripts\activate
    # On macOS/Linux
    source venv/bin/activate
-   ```
 
-3. **Install dependencies**:
-
-   ```bash
+   # Install dependencies
    cd backend
    pip install -r requirements.txt
+
+   # Start the backend server
+   python main.py
    ```
 
-4. **Start the server**:
+3. **Set up frontend**:
+
    ```bash
-   python app.py
+   cd ../frontend
+
+   # Install dependencies
+   npm install
+
+   # Start the frontend development server
+   npm run dev
    ```
-   The backend server will start running on `http://localhost:8000`.
+
+   The frontend server will start running on `http://localhost:5000`.
 
 #### Method 3: Docker Deployment
 
@@ -274,6 +315,13 @@ response = requests.post(url, json=data)
 print(json.dumps(response.json(), indent=2))
 ```
 
+#### Using the Web Interface
+
+1. Open the web interface at `http://localhost:5000`
+2. Enter your platform usernames in the designated fields
+3. Optionally add a Coursera certificate URL for bonus points
+4. Click "Analyze Profile" to see your unified rating and visualization
+
 ## 🧮 Rating Normalization Algorithm
 
 The unified rating system employs a sophisticated normalization algorithm developed through extensive research and testing:
@@ -307,7 +355,7 @@ The unified rating system employs a sophisticated normalization algorithm develo
 3. **Missing Rating Imputation**:
 
    ```python
-   if not user_rating:
+   if not user_rating or user_rating == 'N/A':
        return mean([user_other_platform_ratings]) or mean([platform_historical_ratings])
    ```
 
@@ -344,15 +392,16 @@ total_bonus = Σ(institution_score * course_difficulty * topic_relevance * lengt
 
 ## 🔮 Planned Improvements
 
-| Feature                    | Description                                               | Status          |
-| -------------------------- | --------------------------------------------------------- | --------------- |
-| **N/A Username Handling**  | Automatic rating estimation when user enters "N/A"        | In Progress     |
-| **Coursera Integration**   | Improved integration between scraper and bonus calculator | In Progress     |
-| **Platform Expansion**     | Support for AtCoder, HackerRank, and TopCoder             | Planned Q3 2025 |
-| **Machine Learning Model** | Enhanced rating prediction using ML algorithms            | Planned Q4 2025 |
-| **Real-time Updates**      | Live tracking of rating changes                           | Planned Q4 2025 |
-| **Advanced Visualization** | Interactive comparison charts and progress tracking       | Planned Q3 2025 |
-| **Contest Recommender**    | Suggest suitable contests based on user's profile         | Future Plan     |
+| Feature                     | Description                                               | Status          |
+| --------------------------- | --------------------------------------------------------- | --------------- |
+| **"N/A" Username Handling** | Automatic rating estimation when user enters "N/A"        | In Progress     |
+| **Coursera Integration**    | Improved integration between scraper and bonus calculator | In Progress     |
+| **UI Enhancement**          | Complete Tailwind CSS migration for all components        | In Progress     |
+| **Platform Expansion**      | Support for AtCoder, HackerRank, and TopCoder             | Planned Q3 2023 |
+| **Machine Learning Model**  | Enhanced rating prediction using ML algorithms            | Planned Q4 2023 |
+| **Real-time Updates**       | Live tracking of rating changes                           | Planned Q4 2023 |
+| **Advanced Visualization**  | Interactive comparison charts and progress tracking       | Planned Q3 2023 |
+| **Contest Recommender**     | Suggest suitable contests based on user's profile         | Future Plan     |
 
 ## 👨‍💻 Contributing
 
@@ -376,9 +425,11 @@ We welcome contributions from developers of all skill levels! Here's how to get 
 ### Code Style Guidelines
 
 - Follow PEP 8 for Python code
-- Include docstrings for all functions and classes
+- Use ESLint and Prettier for JavaScript/React code
+- Include docstrings and comments for all functions and classes
 - Add unit tests for new features
 - Keep functions small and focused
+- Use Tailwind CSS for styling frontend components
 
 ## 📄 License
 
@@ -386,7 +437,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔑 Keywords
 
-`competitive programming`, `coding profiles`, `rating normalization`, `algorithm`, `Codeforces`, `LeetCode`, `CodeChef`, `Coursera`, `web scraping`, `API integration`, `unified rating`, `Python`, `Flask`, `data analysis`, `heatmap visualization`, `bonus calculator`, `profile analyzer`, `programming achievements`, `developer metrics`
+`competitive programming`, `coding profiles`, `rating normalization`, `algorithm`, `Codeforces`, `LeetCode`, `CodeChef`, `Coursera`, `web scraping`, `API integration`, `unified rating`, `Python`, `Flask`, `React`, `Tailwind CSS`, `data analysis`, `heatmap visualization`, `bonus calculator`, `profile analyzer`, `programming achievements`, `developer metrics`
 
 ## 📞 Contact & Support
 
@@ -397,5 +448,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <div align="center">
 Created with ❤️ for competitive programmers worldwide.
 <br>
-© 2025 Coding Profile Analyzer | Last Updated: June 17, 2025
+© 2023 Coding Profile Analyzer | Last Updated: June 17, 2023
 </div>

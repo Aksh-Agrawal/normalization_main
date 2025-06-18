@@ -11,9 +11,13 @@ export default defineConfig({
     port: 5000,
     proxy: {
       "/api": {
-        target: "http://localhost:5001",
+        target: "http://localhost:8000", // Match backend port
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
+    },
+    watch: {
+      usePolling: true,
     },
   },
   build: {
@@ -28,7 +32,12 @@ export default defineConfig({
     manifest: true,
   },
   resolve: {
-    extensions: [".mjs", ".js", ".jsx", ".json"],
+    extensions: [".mjs", ".js", ".jsx", ".json", ".ts", ".tsx"],
+    alias: {
+      "@": resolve(__dirname, "./src"),
+      "@components": resolve(__dirname, "./src/components"),
+      "@assets": resolve(__dirname, "./public"),
+    },
   },
   base: "/",
 });
