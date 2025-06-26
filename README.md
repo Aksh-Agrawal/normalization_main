@@ -1,14 +1,12 @@
 # 🏆 Unified Ranking System
 
-<<<<<<< HEAD
+
 A comprehensive coding skills assessment platform that integrates multiple programming platforms with educational achievements to provide unified rankings.
 =======
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![Python](https://img.shields.io/badge/Python-3.11-green)
-![React](https://img.shields.io/badge/React-18.2.0-61dafb)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.3.2-38bdf8)
 ![Last Updated](https://img.shields.io/badge/last%20updated-June%2017%2C%202023-brightgreen)
->>>>>>> 02419fe246175f5dc024244b3a521cab5ba57409
+
 
 ## 🌟 Complete Overview
 
