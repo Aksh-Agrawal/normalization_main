@@ -287,10 +287,5 @@ Ready to unify your coding achievements? Here's how:
 <<<<<<< HEAD
 **🏆 Transform how you track and showcase your programming journey. Start building your unified coding profile today!**
 
-**[🚀 Get Started Now - Go to Backend Folder](backend/)**
+**[🚀 Get Started Now - Go to Backend Folder Readme ](backend/README.md)**
 =======
-<div align="center">
-Created with ❤️ for competitive programmers worldwide.
-<br>
-</div>
->>>>>>> 02419fe246175f5dc024244b3a521cab5ba57409
