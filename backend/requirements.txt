@@ -7,3 +7,7 @@ numpy==1.26.3
 matplotlib==3.8.2
 selenium==4.16.0
 webdriver_manager==4.0.1
+# Additional packages for enhanced functionality
+bcrypt==4.1.2
+# SQLite is built-in with Python
+# Added for better password hashing (optional upgrade from hashlib)
