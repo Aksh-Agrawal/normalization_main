@@ -1,12 +1,13 @@
 # 🏆 Unified Ranking System
 
+![Version](https://img.shields.io/badge/version-2.0-blue)
+![Python](https://img.shields.io/badge/Python-3.11-green)
+![Database](https://img.shields.io/badge/Database-Enhanced%20SQLite-orange)
+![Last Updated](https://img.shields.io/badge/last%20updated-June%2027%2C%202025-brightgreen)
+
+> 🎉 **NEW**: Enhanced Database System v2.0 - Production-ready architecture with advanced analytics and user management!
 
 A comprehensive coding skills assessment platform that integrates multiple programming platforms with educational achievements to provide unified rankings.
-=======
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
-![Python](https://img.shields.io/badge/Python-3.11-green)
-![Last Updated](https://img.shields.io/badge/last%20updated-June%2017%2C%202023-brightgreen)
-
 
 ## 🌟 Complete Overview
 
@@ -68,6 +69,49 @@ The Unified Ranking System is a sophisticated Python application that revolution
 - 🎯 Platform difficulty consideration in weighting
 - 🎓 Seamless educational bonus integration
 - 📈 Final unified ranking calculation
+
+## 🗄️ Enhanced Database System v2.0
+
+### 🚀 **Production-Ready Architecture**
+
+The system now features a comprehensive, normalized database schema designed for scalability and performance:
+
+#### **🔒 Enhanced Security & Authentication**
+
+- **bcrypt password hashing** (upgraded from SHA-256)
+- **Session management** with tracking and analytics
+- **Email verification** system (ready for activation)
+- **Rich user profiles** with timezone, language preferences
+
+#### **📊 Advanced Data Management**
+
+- **15 specialized tables** with proper relationships
+- **Foreign key constraints** ensuring data integrity
+- **Strategic indexes** for optimal query performance
+- **Generated columns** for automatic calculations
+
+#### **🏆 Comprehensive Tracking**
+
+- **Platform Management**: 6 pre-configured platforms with auto-fetch
+- **Course Intelligence**: 12 top institutions + 14 smart categories
+- **Achievement System**: Badges, milestones, and gamification
+- **Analytics Engine**: System-wide insights and reporting
+
+#### **🛠️ Database Management Tools**
+
+```bash
+# System health check
+python db_analyzer.py
+
+# Generate analytics report
+python db_manager.py report
+
+# Create backup
+python db_manager.py backup
+
+# Export data
+python db_manager.py export
+```
 
 ### 🎮 Three Application Modes
 
@@ -285,5 +329,4 @@ Ready to unify your coding achievements? Here's how:
 <<<<<<< HEAD
 **🏆 Transform how you track and showcase your programming journey. Start building your unified coding profile today!**
 
-**[🚀 Get Started Now - Go to Backend Folder Readme ](backend/README.md)**
-=======
+# **[🚀 Get Started Now - Go to Backend Folder Readme ](backend/README.md)**

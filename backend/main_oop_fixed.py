@@ -9,7 +9,7 @@ from pathlib import Path
 backend_dir = Path(__file__).parent
 sys.path.append(str(backend_dir))
 
-from services.auth_service import AuthenticationService
+from services.enhanced_auth_service import EnhancedAuthService
 from services.user_input_handler import UserInputHandler
 from services.ranking_service import EnhancedRankingSystem
 from heatmap.heat_map import (
@@ -29,7 +29,7 @@ class FixedUnifiedRankingApp:
     def __init__(self):
         """Initialize the application"""
         print("🔄 Initializing application...")
-        self.auth_service = AuthenticationService()
+        self.auth_service = EnhancedAuthService()
         self.input_handler = UserInputHandler(self.auth_service)  # Pass the same auth service
         
         try:

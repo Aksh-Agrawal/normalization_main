@@ -7,13 +7,13 @@ from rating_scraper_api.leetcode_api import fetch_leetcode_profile
 from rating_scraper_api.CodeChef_api import fetch_codechef_profile
 from bonus_calculatorF import bonus_calculator
 from services.auth_service import AuthenticationService
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, Union
 
 class EnhancedRankingSystem:
     """Enhanced ranking system with user management and database integration"""
     
-    def __init__(self, auth_service: AuthenticationService):
-        """Initialize the enhanced ranking system"""
+    def __init__(self, auth_service):
+        """Initialize the enhanced ranking system (compatible with both auth services)"""
         self.auth_service = auth_service
         self.ranking_system = UnifiedRankingSystem()
         self.platform_configs = {
